@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dinossauro Rugindo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .dot, .dash {
+            display: inline-block;
+            margin: 10px;
+        }
+        .dot {
+            width: 20px;
+            height: 20px;
+            background-color: green;
+            border-radius: 50%;
+        }
+        .dash {
+            width: 60px;
+            height: 20px;
+            background-color: green;
+        }
+        .space {
+            display: block;
+            height: 20px;
+        }
+        img {
+            margin-top: 20px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>O Dinossauro Rugiu!</h1>
+    <div id="morse"></div>
+    <img src="dinosaur.png" alt="Dinossauro">
+    <button onclick="rugir()">Clique para ouvir o rugido!</button>
+
+    <script>
+        // Código Morse para "DEREK"
+        const derekMorse = [
+            ['dash', 'dot', 'dot'], // D
+            ['dot'],               // E
+            ['dot', 'dash', 'dot'], // R
+            ['dot'],               // E
+            ['dash', 'dot', 'dash'] // K
+        ];
+
+        // Funções de áudio para ponto e traço
+        const pontoAudio = new Audio('VELOCIRAPTOR.mp3'); // Rugido curto
+        const tracoAudio = new Audio('T-REX.mp3');        // Rugido longo
+
+        function rugir() {
+            const morseDiv = document.getElementById('morse');
+            morseDiv.innerHTML = ''; // Limpa a tela antes de começar
+
+            let letterIndex = 0; // Índice da letra atual
+            let signalIndex = 0; // Índice do sinal atual na letra
+
+            function mostrarProximo() {
+                if (letterIndex < derekMorse.length) {
+                    const currentLetter = derekMorse[letterIndex];
+
+                    if (signalIndex < currentLetter.length) {
+                        // Adiciona ponto ou traço
+                        const type = currentLetter[signalIndex];
+                        const elemento = document.createElement('div');
+                        elemento.className = type; // Cria bolinha ou barrinha
+                        morseDiv.appendChild(elemento);
+
+                        // Reproduz o som correspondente
+                        if (type === 'dot') {
+                            pontoAudio.play();
+                        } else if (type === 'dash') {
+                            tracoAudio.play();
+                        }
+
+                        // Tempo entre sinais na mesma letra
+                        setTimeout(() => {
+                            signalIndex++;
+                            mostrarProximo();
+                        }, type === 'dot' ? 500 : 1000);
+                    } else {
+                        // Final da letra: Adiciona pausa visual
+                        const space = document.createElement('div');
+                        space.className = 'space';
+                        morseDiv.appendChild(space);
+
+                        // Espaço entre letras (1,5 segundos)
+                        signalIndex = 0;
+                        letterIndex++;
+                        setTimeout(mostrarProximo, 1500);
+                    }
+                }
+            }
+
+            mostrarProximo();
+        }
+    </script>
+</body>
+</html>
